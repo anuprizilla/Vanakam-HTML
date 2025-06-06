@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Colorful Grocery Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4);
+      min-height: 100vh;
+      color: #333;
+      overflow-x: hidden;
+    }
+    .page { display: none; padding: 2rem; max-width: 900px; margin: auto; }
+    .visible { display: block; animation: fadeIn 0.6s ease-in-out; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      background: linear-gradient(45deg, #ff6a00, #ee0979);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: linear-gradient(45deg, #00dbde, #fc00ff);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      margin: 10px 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    input[type="email"], input[type="password"], input[type="number"] {
+      width: 90%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      max-width: 400px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .category {
+      margin: 25px 0;
+      border-radius: 12px;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+
+    .category h2 {
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .items {
+      display: none;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 10px;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+      align-items: center;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-popup {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: white;
+      color: #000;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      display: none;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .cart-popup h3 {
+      margin-bottom: 10px;
+      color: #ee0979;
+    }
+
+    .welcome-page, .login-page {
+      padding-top: 100px;
+      text-align: center;
+    }
+
+    .welcome-page h1 {
+      font-size: 3rem;
+      color: #fc466b;
+    }
+
+    .welcome-page h2 {
+      color: #3f5efb;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Welcome Page -->
+  <div class="page welcome-page visible" id="welcomePage">
+    <div class="glass-card">
+      <h1>Welcome to</h1>
+      <h2>Colorful Grocery Store</h2>
+      <button onclick="goToLogin()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Login Page -->
+  <div class="page login-page" id="loginPage">
+    <div class="glass-card">
+      <h2>Login</h2>
+      <input type="email" id="email" placeholder="Email"><br>
+      <input type="password" id="password" placeholder="Password"><br>
+      <button onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <!-- Main Grocery Page -->
+  <div class="page" id="mainPage">
+    <header>Colorful Grocery Store</header>
+
+    <!-- Vegetables -->
+    <div class="category" onclick="toggleItems('veg')">
+      <h2>🥕 Vegetables</h2>
+      <div class="items" id="veg">
+        <div class="item">Tomato (₹20/kg) <input type="number" data-name="Tomato" data-price="20"></div>
+        <div class="item">Carrot (₹30/kg) <input type="number" data-name="Carrot" data-price="30"></div>
+        <div class="item">Potato (₹25/kg) <input type="number" data-name="Potato" data-price="25"></div>
+        <div class="item">Onion (₹30/kg) <input type="number" data-name="Onion" data-price="30"></div>
+        <div class="item">Beans (₹40/kg) <input type="number" data-name="Beans" data-price="40"></div>
+        <div class="item">Capsicum (₹50/kg) <input type="number" data-name="Capsicum" data-price="50"></div>
+        <div class="item">Cabbage (₹20/kg) <input type="number" data-name="Cabbage" data-price="20"></div>
+        <div class="item">Cauliflower (₹35/kg) <input type="number" data-name="Cauliflower" data-price="35"></div>
+        <div class="item">Spinach (₹15/bunch) <input type="number" data-name="Spinach" data-price="15"></div>
+        <div class="item">Brinjal (₹28/kg) <input type="number" data-name="Brinjal" data-price="28"></div>
+      </div>
+    </div>
+
+    <!-- Fruits -->
+    <div class="category" onclick="toggleItems('fruit')">
+      <h2>🍎 Fruits</h2>
+      <div class="items" id="fruit">
+        <div class="item">Apple (₹120/kg) <input type="number" data-name="Apple" data-price="120"></div>
+        <div class="item">Banana (₹40/dozen) <input type="number" data-name="Banana" data-price="40"></div>
+        <div class="item">Mango (₹100/kg) <input type="number" data-name="Mango" data-price="100"></div>
+        <div class="item">Orange (₹70/kg) <input type="number" data-name="Orange" data-price="70"></div>
+        <div class="item">Papaya (₹60/kg) <input type="number" data-name="Papaya" data-price="60"></div>
+        <div class="item">Watermelon (₹25/kg) <input type="number" data-name="Watermelon" data-price="25"></div>
+        <div class="item">Grapes (₹90/kg) <input type="number" data-name="Grapes" data-price="90"></div>
+        <div class="item">Pineapple (₹50/each) <input type="number" data-name="Pineapple" data-price="50"></div>
+        <div class="item">Kiwi (₹30/each) <input type="number" data-name="Kiwi" data-price="30"></div>
+        <div class="item">Strawberry (₹200/kg) <input type="number" data-name="Strawberry" data-price="200"></div>
+      </div>
+    </div>
+
+    <!-- Dairy -->
+    <div class="category" onclick="toggleItems('dairy')">
+      <h2>🧀 Dairy</h2>
+      <div class="items" id="dairy">
+        <div class="item">Milk (₹50/ltr) <input type="number" data-name="Milk" data-price="50"></div>
+        <div class="item">Curd (₹30/500g) <input type="number" data-name="Curd" data-price="30"></div>
+        <div class="item">Paneer (₹80/250g) <input type="number" data-name="Paneer" data-price="80"></div>
+        <div class="item">Butter (₹45/100g) <input type="number" data-name="Butter" data-price="45"></div>
+        <div class="item">Cheese (₹100/pack) <input type="number" data-name="Cheese" data-price="100"></div>
+        <div class="item">Cream (₹60/100ml) <input type="number" data-name="Cream" data-price="60"></div>
+        <div class="item">Ghee (₹90/200ml) <input type="number" data-name="Ghee" data-price="90"></div>
+        <div class="item">Yogurt (₹25/cup) <input type="number" data-name="Yogurt" data-price="25"></div>
+      </div>
+    </div>
+
+    <button onclick="showCart()">🛒 View Cart</button>
+  </div>
+
+  <!-- Cart Popup -->
+  <div class="cart-popup" id="cartPopup">
+    <h3>Your Cart</h3>
+    <div id="cartItems"></div>
+    <hr>
+    <div id="totalAmount"></div>
+    <br>
+    <button onclick="document.getElementById('cartPopup').style.display='none'">Close</button>
+  </div>
+
+  <script>
+    function goToLogin() {
+      document.getElementById("welcomePage").classList.remove("visible");
+      document.getElementById("loginPage").classList.add("visible");
+    }
+    function login() {
+      let email = document.getElementById("email").value;
+      let pass = document.getElementById("password").value;
+      if (email && pass) {
+        document.getElementById("loginPage").classList.remove("visible");
+        document.getElementById("mainPage").classList.add("visible");
+      } else {
+        alert("Please enter both email and password");
+      }
+    }
+    function toggleItems(id) {
+      let items = document.getElementById(id);
+      items.style.display = items.style.display === "block" ? "none" : "block";
+    }
+    function showCart() {
+      let inputs = document.querySelectorAll('input[type="number"]');
+      let cart = document.getElementById("cartItems");
+      cart.innerHTML = '';
+      let total = 0;
+      inputs.forEach(input => {
+        let qty = parseFloat(input.value);
+        let price = parseFloat(input.dataset.price);
+        let name = input.dataset.name;
+        if (qty > 0) {
+          let cost = qty * price;
+          cart.innerHTML += `<div>${name} - ${qty} x ₹${price} = ₹${cost}</div>`;
+          total += cost;
+        }
+      });
+      document.getElementById("totalAmount").innerHTML = `<strong>Total: ₹${total.toFixed(2)}</strong>`;
+      document.getElementById("cartPopup").style.display = "block";
+    }
+  </script>
+</body>
+</html>
